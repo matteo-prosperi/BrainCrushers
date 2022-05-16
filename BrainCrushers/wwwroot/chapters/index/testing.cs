@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 public partial class SortAlgorithms
 {
-    public async IAsyncEnumerable<string> RunAsync()
+    public async IAsyncEnumerable<string> TestAsync()
     {
         Random random = new();
-        for (int size = 10; size < 20; size++)
+        foreach (int size in new int[] { 0, 1, 2, 5, 10 })
         {
             int[] data = new int[size];
             for (int i = 0; i < size; i++)
@@ -25,37 +25,62 @@ public partial class SortAlgorithms
             yield return $"[{string.Join(", ", data)}] => ...";
             await Task.Yield();
 
-            string? exception = null;
-            TimeSpan? time = null;
             try
             {
-                Stopwatch stopwatch = new Stopwatch();
-                stopwatch.Start();
                 Sort(data);
-                stopwatch.Stop();
-                time = stopwatch.Elapsed;
             }
             catch (Exception e)
             {
-                exception = $"{Environment.NewLine}{e}";
-            }
-
-            if (exception is not null)
-            {
-                yield return exception;
-                yield break;
+                throw new ApplicationException("Error while running test", e);
             }
 
             bool success = data.SequenceEqual(sorted);
-            yield return $" [{string.Join(", ", data)}] {(success ? '✓' : '✗')} {time!.Value.TotalMilliseconds}ms{Environment.NewLine}";
+            yield return $" [{string.Join(", ", data)}] {(success ? '✓' : '✗')}{Environment.NewLine}";
             if (!success)
             {
-                yield break;
+                throw new ApplicationException("Invalid test result");
             }
-            else
-            {
-                await Task.Yield();
-            }
+        }
+    }
+
+    public Task<KeyValuePair<int, TimeSpan>> BenchmarkAsync(int? problemSize)
+    {
+        if (problemSize is null)
+        {
+            problemSize = 10;
+        }
+
+        Random random = new();
+        int[] data = new int[problemSize.Value];
+        for (int i = 0; i < problemSize; i++)
+        {
+            data[i] = random.Next(1000);
+        }
+
+        int[] sorted = (int[])data.Clone();
+        Array.Sort(sorted);
+
+        TimeSpan time;
+        try
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            Sort(data);
+            stopwatch.Stop();
+            time = stopwatch.Elapsed;
+        }
+        catch (Exception e)
+        {
+            throw new ApplicationException("Error while running test", e);
+        }
+
+        if (data.SequenceEqual(sorted))
+        {
+            return Task.FromResult(KeyValuePair.Create(problemSize.Value, time));
+        }
+        else
+        {
+            throw new ApplicationException("Invalid test result");
         }
     }
 }

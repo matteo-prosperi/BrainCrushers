@@ -26,8 +26,8 @@ public partial class SortAlgorithms
             unsorted[minPos] = tmp;
             unsorted = unsorted.Slice(1);
         }
-        #endregion
-        #region Suffix
+#endregion
+#region Suffix
     }
 }
 #endregion

@@ -4,9 +4,9 @@ This text comes from a **.md** file
 
 Now I will get code from a **.cs** file.
 
-[](CODE Prefix)
-[](CODE Problem)
-[](CODE Suffix)
+[](READONLY Prefix)
+[](EDITABLE Problem)
+[](READONLY Suffix)
 
 You can press the button below to compile and run the code above.
 

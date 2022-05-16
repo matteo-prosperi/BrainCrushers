@@ -26,10 +26,10 @@ else
 				@((MarkupString)htmlElement.Value)
 			</div>
 		}
-		else if (element is CodeFile.Region codeElement)
+		else if (element is ChapterMarkdown.CodeRegion codeElement)
 		{
 			<div>
-				<textarea @bind="codeElement.Code" style="align-self:stretch"/>
+				<textarea @bind="codeElement.Region.Code" style="align-self:stretch" readonly="@codeElement.IsReadonly" />
 			</div>
 		}
 		else if (element is ChapterMarkdown.RunCommand runElement)
@@ -38,7 +38,7 @@ else
 				<button class="btn btn-primary" @onclick="@(() => RunAsync(runElement))" disabled="@IsBuildDisabled">Build and run</button>
 			</div>
 			<div>
-				<textarea style="align-self:stretch">@runElement.Result</textarea>
+				<textarea style="align-self:stretch" readonly>@runElement.Result</textarea>
 			</div>
 		}
 	}
@@ -122,11 +122,23 @@ else
 			if (collectibleType?.Type is not null)
 			{
 				object chapterComponent = Activator.CreateInstance(collectibleType.Type)!;
-				var runAsync = collectibleType.Type.GetMethod("RunAsync")!;
-				await foreach (string s in (IAsyncEnumerable<string>)runAsync.Invoke(chapterComponent, parameters: null)!)
+				try
 				{
-					// TODO find a more efficient way to append data into the output box
-					command.Result += s;
+					var runAsync = collectibleType.Type.GetMethod("TestAsync")!;
+					await foreach (string s in (IAsyncEnumerable<string>)runAsync.Invoke(chapterComponent, parameters: null)!)
+					{
+						// TODO find a more efficient way to append data into the output box
+						command.Result += s;
+						StateHasChanged();
+					}
+				}
+				catch (ApplicationException e)
+				{
+					command.Result += Environment.NewLine + e.Message;
+					if (e.InnerException is not null)
+					{
+						command.Result += Environment.NewLine + e.InnerException.ToString();
+					}
 					StateHasChanged();
 				}
 			}

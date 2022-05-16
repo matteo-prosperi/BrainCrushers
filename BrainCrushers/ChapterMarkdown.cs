@@ -5,7 +5,7 @@ namespace BrainCrushers;
 
 public class ChapterMarkdown
 {
-	private static readonly Regex MarkdownRegex = new Regex(@"\[\]\((?:(?:CODE\s+(.*?))|(?:RUN\s+(.*?)))\)", RegexOptions.Compiled | RegexOptions.Singleline);
+	private static readonly Regex MarkdownRegex = new Regex(@"\[\]\((?:(?:EDITABLE\s+(.*?))|(?:READONLY\s+(.*?))|(?:RUN\s+(.*?)))\)", RegexOptions.Compiled | RegexOptions.Singleline);
 
 	public ReadOnlyCollection<object> Sections { get; private set; }
 
@@ -22,24 +22,28 @@ public class ChapterMarkdown
 		int end = 0;
 		foreach (Match match in markdownMatches)
 		{
-			Capture codePointerCapture = match.Groups[0].Captures.Single();
-			string? regionName = match.Groups[1].Captures.SingleOrDefault()?.Value.Trim();
-			string? runName = match.Groups[2].Captures.SingleOrDefault()?.Value.Trim();
+			Capture wholeCapture = match.Groups[0].Captures.Single();
+			Capture? editableCapture = match.Groups[1].Captures.SingleOrDefault();
+			Capture? readonlyCapture = match.Groups[2].Captures.SingleOrDefault();
+			Capture? runCapture = match.Groups[3].Captures.SingleOrDefault();
 
-			sections.Add(new Html(markdown.Substring(end, codePointerCapture.Index - end)));
+			string? regionName = (editableCapture?.Value ?? readonlyCapture?.Value)?.Trim();
+			string? runName = runCapture?.Value.Trim();
+
+			sections.Add(new Html(markdown.Substring(end, wholeCapture.Index - end)));
 			if (regionName is not null)
             {
 				CodeFile.Region? region = Code.Regions.Where(r => r.Name == regionName).FirstOrDefault();
 				if (region is not null)
 				{
-					sections.Add(region);
+					sections.Add(new CodeRegion(region, isReadonly : readonlyCapture is not null));
 				}
 			}
 			else
             {
 				sections.Add(new RunCommand(runName!));
 			}
-			end = codePointerCapture.Index + codePointerCapture.Length;
+			end = wholeCapture.Index + wholeCapture.Length;
 		}
 
 		if (end < markdown.Length)
@@ -60,7 +64,19 @@ public class ChapterMarkdown
 		}
 	}
 
-    public class RunCommand
+	public class CodeRegion
+	{
+		public CodeFile.Region Region { get; private set; }
+		public bool IsReadonly { get; private set; }
+
+		public CodeRegion(CodeFile.Region region, bool isReadonly)
+		{
+			Region = region;
+			IsReadonly = isReadonly;
+		}
+	}
+
+	public class RunCommand
     {
 		public string TypeName { get; private set; }
 
