@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using BlazorMonaco;
+using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 
 namespace BrainCrushers;
@@ -69,10 +70,14 @@ public class ChapterMarkdown
 		public CodeFile.Region Region { get; private set; }
 		public bool IsReadonly { get; private set; }
 
+		public int LineCount { get; set; }
+
 		public CodeRegion(CodeFile.Region region, bool isReadonly)
 		{
 			Region = region;
 			IsReadonly = isReadonly;
+
+			LineCount = region.Code.Where(c => c == '\n').Count() + 1;
 		}
 	}
 
@@ -80,11 +85,31 @@ public class ChapterMarkdown
     {
 		public string TypeName { get; private set; }
 
-		public string Result { get; set; } = String.Empty;
+		public string Result { get; private set; } = String.Empty;
+
+		public int LineCount { get; private set; } = 1;
+
+		public MonacoEditor? Editor { get; set; }
+
+		public bool? Success { get; private set; }
 
 		public RunCommand(string typeName)
 		{
 			TypeName = typeName;
+		}
+
+		public async Task SetResultAsync(string? result, bool? success)
+        {
+			Success = success;
+			if (result is not null)
+            {
+				Result = result;
+				LineCount = result.Where(c => c == '\n').Count() + 1;
+				if (Editor is not null)
+				{
+					await Editor.SetValue(result);
+				}
+			}
 		}
 	}
 }

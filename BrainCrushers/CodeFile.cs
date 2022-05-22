@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using BlazorMonaco;
+using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 
 namespace BrainCrushers;
@@ -46,7 +47,7 @@ public class CodeFile
 				else
 				{
 					Capture endRegionCapture = endRegionGroup.Captures.Single();
-					regions.Add(new Region(regionName, code.Substring(regionStart.Value, endRegionCapture.Index - regionStart.Value)));
+					regions.Add(new Region(regionName, code.Substring(regionStart.Value, endRegionCapture.Index - regionStart.Value).TrimStart('\r', '\n')));
 					regionStart = null;
 					regionEnd = endRegionCapture.Index + endRegionCapture.Length;
 				}
@@ -72,5 +73,7 @@ public class CodeFile
 		public string? Name { get; private set; }
 
 		public string Code { get; set; }
+
+		public MonacoEditor? Editor { get; set; }
 	}
 }

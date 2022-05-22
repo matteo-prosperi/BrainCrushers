@@ -22,23 +22,24 @@ else
 	{
 		if (element is ChapterMarkdown.Html htmlElement)
 		{
-			<div>
+			<div class="container-fluid">
 				@((MarkupString)htmlElement.Value)
 			</div>
 		}
 		else if (element is ChapterMarkdown.CodeRegion codeElement)
 		{
-			<div>
-				<textarea @bind="codeElement.Region.Code" style="align-self:stretch" readonly="@codeElement.IsReadonly" />
+			<div class="container-fluid" style="height:@(codeElement.LineCount * 19 + 5)px;background-color:@(codeElement.IsReadonly ? "lightgrey":"lightblue")">
+				<MonacoEditor ConstructionOptions="@((editor) => EditorConstructionOptions(editor, codeElement))" OnDidChangeModelContent="@((e) => EditorOnDidChangeModelContent(e, codeElement))" />
 			</div>
 		}
 		else if (element is ChapterMarkdown.RunCommand runElement)
 		{
-			<div>
+			<div class="container-fluid">
 				<button class="btn btn-primary" @onclick="@(() => RunAsync(runElement))" disabled="@IsBuildDisabled">Build and run</button>
 			</div>
-			<div>
-				<textarea style="align-self:stretch" readonly>@runElement.Result</textarea>
+			<div class="container-fluid" style="height:@(runElement.LineCount * 19 + 5)px;background-color:@(runElement.Success switch { true => "lightgreen", false => "pink", _ => "white"})">
+				<MonacoEditor ConstructionOptions="@((editor) => OutputConstructionOptions(editor, runElement))" />
+				<!--<textarea class="form-control" readonly>@runElement.Result</textarea>-->
 			</div>
 		}
 	}
@@ -97,12 +98,25 @@ else
 	private async void RunAsync(ChapterMarkdown.RunCommand command)
 	{
 		IsBuildDisabled = true;
-		command.Result = String.Empty;
+		await command.SetResultAsync(String.Empty, success: null);
+
+		StringBuilder code = new();
+		foreach(var region in MarkDown!.Code.Regions)
+		{
+			if (region.Editor is null)
+			{
+				code.Append(region.Code);
+				code.Append(Environment.NewLine);
+			}
+			else
+			{
+				code.Append(await region.Editor.GetValue());
+				code.Append(Environment.NewLine);
+			}
+		}
 
 		var compiler = new Compiler(Client);
-		string code = string.Join(Environment.NewLine, MarkDown!.Code.Regions.Select(c => c.Code));
-
-		var (compilationResult, collectibleType) = await compiler.CompileAsync(new string[] { code, await TestingCode }, command.TypeName);
+		var (compilationResult, collectibleType) = await compiler.CompileAsync(new string[] { code.ToString(), await TestingCode }, command.TypeName);
 		try
 		{
 			if (!compilationResult.Success)
@@ -115,7 +129,7 @@ else
 					sb.AppendLine();
 					sb.AppendLine(d.ToString());
 				}
-				command.Result = sb.ToString();
+				await command.SetResultAsync(sb.ToString(), success: false);
 				return;
 			}
 
@@ -127,20 +141,17 @@ else
 					var runAsync = collectibleType.Type.GetMethod("TestAsync")!;
 					await foreach (string s in (IAsyncEnumerable<string>)runAsync.Invoke(chapterComponent, parameters: null)!)
 					{
-						// TODO find a more efficient way to append data into the output box
-						command.Result += s;
+						await command.SetResultAsync(command.Result + s, success: null);
 						StateHasChanged();
 					}
 				}
 				catch (ApplicationException e)
 				{
-					command.Result += Environment.NewLine + e.Message;
-					if (e.InnerException is not null)
-					{
-						command.Result += Environment.NewLine + e.InnerException.ToString();
-					}
-					StateHasChanged();
+					await command.SetResultAsync(command.Result + Environment.NewLine + e.Message + (e.InnerException is null ? "" : Environment.NewLine + e.InnerException), success: false);
+					return;
 				}
+
+				await command.SetResultAsync(null, success: true);
 			}
 		}
 		finally
@@ -148,6 +159,49 @@ else
 			collectibleType?.Dispose();
 			IsBuildDisabled = false;
 			StateHasChanged();
+		}
+	}
+
+	private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor, ChapterMarkdown.CodeRegion region)
+	{
+		region.Region.Editor = editor;
+
+		return new StandaloneEditorConstructionOptions
+		{
+			AutomaticLayout = true,
+			Language = "csharp",
+			Value = region.Region.Code,
+			ReadOnly = region.IsReadonly,
+			LineNumbers = "off",
+			ScrollBeyondLastLine = false,
+			RenderLineHighlight = "none",
+			Minimap = new() { Enabled = false },
+			Folding = false
+		};
+	}
+
+	private StandaloneEditorConstructionOptions OutputConstructionOptions(MonacoEditor editor, ChapterMarkdown.RunCommand runCommand)
+	{
+		runCommand.Editor = editor;
+
+		return new StandaloneEditorConstructionOptions
+		{
+			AutomaticLayout = true,
+			Language = "text/plain",
+			ReadOnly = true,
+			LineNumbers = "off",
+			ScrollBeyondLastLine = false,
+			RenderLineHighlight = "none",
+			Minimap = new() { Enabled = false },
+			Folding = false
+		};
+	}
+
+	private void EditorOnDidChangeModelContent(ModelContentChangedEvent modelContentChangedEvent, ChapterMarkdown.CodeRegion codeElement)
+	{
+		foreach(var change in modelContentChangedEvent.Changes)
+		{
+			codeElement.LineCount += change.Range.StartLineNumber - change.Range.EndLineNumber + change.Text.Where(c => c == '\n').Count();
 		}
 	}
 
