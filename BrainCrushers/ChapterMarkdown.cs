@@ -74,6 +74,11 @@ public class ChapterMarkdown
 		{
 			Region = region;
 			IsReadonly = isReadonly;
+
+			if (isReadonly is false)
+            {
+				Region.IsModifiable = true;
+            }
 		}
 	}
 

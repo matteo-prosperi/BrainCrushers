@@ -2,6 +2,7 @@
 @page "/{chapter}"
 
 @using System.Text
+@using Blazored.LocalStorage
 
 <PageTitle>@Title</PageTitle>
 
@@ -23,11 +24,23 @@ else
 		{
 			@if (codeElement.Region.Name is not null)
 			{
-				<div class="container-fluid">
-					<span class="badge rounded-pill bg-@(codeElement.IsReadonly ? "secondary":"info")">@codeElement.Region.Name</span>
-				</div>
+				@if (codeElement.IsReadonly)
+				{
+					<div class="btn-group">
+					  <button class="btn btn-secondary btn-sm" type="button" disabled>@codeElement.Region.Name</button>
+					</div>
+				}
+				else
+				{
+					<div class="btn-group">
+						<button class="btn btn-info btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">@codeElement.Region.Name</button>
+						<ul class="dropdown-menu">
+							<li><button class="dropdown-item" @onclick="@(codeElement.Region.ResetCode)">Reset code</button></li>
+						</ul>
+					</div>
+				}
 			}
-			<div class="container-fluid" style="height:@(codeElement.Region.LineCount * 19 + 5)px;background-color:@(codeElement.IsReadonly ? "lightgrey":"lightblue")">
+			<div class="container-fluid" style="height:@(codeElement.Region.LineCount * 19 + 5)px;background-color:@(codeElement.IsReadonly ? "#A0A6AB":"#0DCAF0")">
 				<MonacoEditor ConstructionOptions="@((editor) => EditorConstructionOptions(editor, codeElement))" OnDidChangeModelContent="@(codeElement.Region.OnEditorCodeChange)" />
 			</div>
 		}
@@ -45,11 +58,13 @@ else
 
 @code{
 
-	#pragma warning disable CS8618 //Non-nullable property must contain a non-null value when exiting constructor
+#pragma warning disable CS8618 //Non-nullable property must contain a non-null value when exiting constructor
 	[Inject]
 	public HttpClient Client { get; set; }
 	[Inject]
 	public NavigationManager NavigationManager { get; set; }
+	[Inject]
+	ISyncLocalStorageService LocalStorage { get; set; }
 
 	// Set when setting URI parameters
 
@@ -86,7 +101,7 @@ else
 		try
 		{
 			var code = await codeTask;
-			codeFile = new(code);
+			codeFile = new(code, Chapter, LocalStorage);
 		}
 		catch
 		{
@@ -169,9 +184,8 @@ else
 		{
 			AutomaticLayout = true,
 			Language = "csharp",
-			Value = region.Region.OriginalCode,
+			Value = region.Region.Code,
 			ReadOnly = region.IsReadonly,
-			LineNumbers = null,//"off",
 			ScrollBeyondLastLine = false,
 			RenderLineHighlight = "none",
 			Minimap = new() { Enabled = false },
