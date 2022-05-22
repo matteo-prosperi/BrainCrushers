@@ -67,13 +67,39 @@ public class CodeFile
 		public Region(string? name, string code)
 		{
 			Name = name;
-			Code = code;
+			OriginalCode = code;
+
+			LineCount = OriginalCode.Where(c => c == '\n').Count() + 1;
 		}
 
 		public string? Name { get; private set; }
 
-		public string Code { get; set; }
+		private MonacoEditor? editor;
+		public MonacoEditor? Editor
+		{
+			get => editor;
+			set
+            {
+				if (editor is not null)
+                {
+					throw new InvalidOperationException("The editor for a region can only be set once.");
+                }
+				editor = value;
+            }
+        }
 
-		public MonacoEditor? Editor { get; set; }
+		public string OriginalCode { get; private set; }
+
+		public int LineCount { get; set; }
+
+		public async Task<string> GetCurrentCodeAsync() => Editor is null ? OriginalCode : await Editor.GetValue();
+
+		public void OnEditorCodeChange(ModelContentChangedEvent modelContentChangedEvent)
+		{
+			foreach (var change in modelContentChangedEvent.Changes)
+			{
+				LineCount += change.Range.StartLineNumber - change.Range.EndLineNumber + change.Text.Where(c => c == '\n').Count();
+			}
+		}
 	}
 }

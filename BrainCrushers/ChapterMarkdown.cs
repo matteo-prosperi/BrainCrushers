@@ -70,14 +70,10 @@ public class ChapterMarkdown
 		public CodeFile.Region Region { get; private set; }
 		public bool IsReadonly { get; private set; }
 
-		public int LineCount { get; set; }
-
 		public CodeRegion(CodeFile.Region region, bool isReadonly)
 		{
 			Region = region;
 			IsReadonly = isReadonly;
-
-			LineCount = region.Code.Where(c => c == '\n').Count() + 1;
 		}
 	}
 

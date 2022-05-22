@@ -1,13 +1,6 @@
 ﻿@page "/"
 @page "/{chapter}"
 
-@using Markdig
-@using Microsoft.CodeAnalysis
-@using Microsoft.CodeAnalysis.CSharp
-@using Microsoft.CodeAnalysis.Emit
-@using Microsoft.CodeAnalysis.Text
-@using System.Text.RegularExpressions
-@using System.Runtime.Loader
 @using System.Text
 
 <PageTitle>@Title</PageTitle>
@@ -28,46 +21,54 @@ else
 		}
 		else if (element is ChapterMarkdown.CodeRegion codeElement)
 		{
-			<div class="container-fluid" style="height:@(codeElement.LineCount * 19 + 5)px;background-color:@(codeElement.IsReadonly ? "lightgrey":"lightblue")">
-				<MonacoEditor ConstructionOptions="@((editor) => EditorConstructionOptions(editor, codeElement))" OnDidChangeModelContent="@((e) => EditorOnDidChangeModelContent(e, codeElement))" />
+			@if (codeElement.Region.Name is not null)
+			{
+				<div class="container-fluid">
+					<span class="badge rounded-pill bg-@(codeElement.IsReadonly ? "secondary":"info")">@codeElement.Region.Name</span>
+				</div>
+			}
+			<div class="container-fluid" style="height:@(codeElement.Region.LineCount * 19 + 5)px;background-color:@(codeElement.IsReadonly ? "lightgrey":"lightblue")">
+				<MonacoEditor ConstructionOptions="@((editor) => EditorConstructionOptions(editor, codeElement))" OnDidChangeModelContent="@(codeElement.Region.OnEditorCodeChange)" />
 			</div>
 		}
 		else if (element is ChapterMarkdown.RunCommand runElement)
 		{
 			<div class="container-fluid">
-				<button class="btn btn-primary" @onclick="@(() => RunAsync(runElement))" disabled="@IsBuildDisabled">Build and run</button>
+				<button class="btn btn-primary" @onclick="@(() => RunAsync(runElement))" disabled="@IsBuildDisabled">Build and run <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden="@(!IsBuildDisabled)"></span></button>
 			</div>
 			<div class="container-fluid" style="height:@(runElement.LineCount * 19 + 5)px;background-color:@(runElement.Success switch { true => "lightgreen", false => "pink", _ => "white"})">
 				<MonacoEditor ConstructionOptions="@((editor) => OutputConstructionOptions(editor, runElement))" />
-				<!--<textarea class="form-control" readonly>@runElement.Result</textarea>-->
 			</div>
 		}
 	}
 }
 
 @code{
-	[Parameter]
-	public string? Chapter { get; set; }
 
+	#pragma warning disable CS8618 //Non-nullable property must contain a non-null value when exiting constructor
 	[Inject]
 	public HttpClient Client { get; set; }
-
 	[Inject]
 	public NavigationManager NavigationManager { get; set; }
 
-	public string? ErrorText { get; private set; } = "Loading...";
+	// Set when setting URI parameters
 
-	public string? Title { get; private set; } = "Loading...";
-
-	public ChapterMarkdown? MarkDown;
-
-	public bool IsBuildDisabled { get; private set; } = false;
-
+	[Parameter]
+	public string Chapter { get; set; }
+	public string Title { get; private set; }
 	public Task<string> TestingCode;
+#pragma warning restore CS8618
 
-	protected override async Task OnInitializedAsync()
+	public string? ErrorText { get; private set; }
+	public ChapterMarkdown? MarkDown { get; private set; }
+	public bool IsBuildDisabled { get; private set; }
+
+	protected override async Task OnParametersSetAsync()
 	{
-		NavigationManager.LocationChanged += HandleLocationChanged;
+		ErrorText = "Loading...";
+		Title = "Loading...";
+		IsBuildDisabled = false;
+		MarkDown = null;
 
 		if (Chapter is null)
 		{
@@ -78,6 +79,8 @@ else
 		var codeTask = Client.GetStringAsync($"chapters/{Uri.EscapeDataString(Chapter)}/code.cs");
 		TestingCode = Client.GetStringAsync($"chapters/{Uri.EscapeDataString(Chapter)}/testing.cs");
 
+		StateHasChanged();
+
 		var markdown = await markdownTask;
 		CodeFile? codeFile = null;
 		try
@@ -87,6 +90,8 @@ else
 		}
 		catch
 		{
+			ErrorText = "Error loading chapter";
+			return;
 		}
 
 		MarkDown = new ChapterMarkdown(markdown, codeFile);
@@ -103,20 +108,14 @@ else
 		StringBuilder code = new();
 		foreach(var region in MarkDown!.Code.Regions)
 		{
-			if (region.Editor is null)
-			{
-				code.Append(region.Code);
-				code.Append(Environment.NewLine);
-			}
-			else
-			{
-				code.Append(await region.Editor.GetValue());
-				code.Append(Environment.NewLine);
-			}
+			code.Append("#line 1 \"");
+			code.Append(region.Name is null ? "Unnamed region" : region.Name.Replace('\"', '\''));		
+			code.AppendLine("\"");
+			code.AppendLine(await region.GetCurrentCodeAsync());
 		}
 
 		var compiler = new Compiler(Client);
-		var (compilationResult, collectibleType) = await compiler.CompileAsync(new string[] { code.ToString(), await TestingCode }, command.TypeName);
+		var (compilationResult, collectibleType) = await compiler.CompileAsync(new string[] { code.ToString(), await TestingCode! }, command.TypeName);
 		try
 		{
 			if (!compilationResult.Success)
@@ -170,9 +169,9 @@ else
 		{
 			AutomaticLayout = true,
 			Language = "csharp",
-			Value = region.Region.Code,
+			Value = region.Region.OriginalCode,
 			ReadOnly = region.IsReadonly,
-			LineNumbers = "off",
+			LineNumbers = null,//"off",
 			ScrollBeyondLastLine = false,
 			RenderLineHighlight = "none",
 			Minimap = new() { Enabled = false },
@@ -196,22 +195,4 @@ else
 			Folding = false
 		};
 	}
-
-	private void EditorOnDidChangeModelContent(ModelContentChangedEvent modelContentChangedEvent, ChapterMarkdown.CodeRegion codeElement)
-	{
-		foreach(var change in modelContentChangedEvent.Changes)
-		{
-			codeElement.LineCount += change.Range.StartLineNumber - change.Range.EndLineNumber + change.Text.Where(c => c == '\n').Count();
-		}
-	}
-
-	private void HandleLocationChanged(object? sender, LocationChangedEventArgs e)
-	{
-		// TODO Handle navigation
-	}
-
-    public void Dispose()
-    {
-        NavigationManager.LocationChanged -= HandleLocationChanged;
-    }
 }
