@@ -1,0 +1,20 @@
+﻿@page "/about"
+
+<PageTitle>About Brain Crushers</PageTitle>
+
+@((MarkupString)Html)
+
+@code{
+	#pragma warning disable CS8618 //Non-nullable property must contain a non-null value when exiting constructor
+	[Inject]
+	public HttpClient Client { get; set; }
+#pragma warning restore CS8618
+
+	public string Html { get; set; } = "Loading...";
+
+	protected override async Task OnInitializedAsync()
+	{
+		var markdown = await Client.GetStringAsync($"about.md");
+		Html = Markdig.Markdown.ToHtml(markdown);
+	}
+}
