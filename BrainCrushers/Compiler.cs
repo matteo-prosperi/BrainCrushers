@@ -28,9 +28,9 @@ public class Compiler
 		{
 			referenceStreams = new Task<Stream>[]
 			{
-					Client.GetStreamAsync("_framework/System.Private.CoreLib.dll"),
-					Client.GetStreamAsync("_framework/System.Runtime.dll"),
-					Client.GetStreamAsync("_framework/System.Linq.dll"),
+				Client.GetStreamAsync("_framework/System.Private.CoreLib.dll"),
+				Client.GetStreamAsync("_framework/System.Runtime.dll"),
+				Client.GetStreamAsync("_framework/System.Linq.dll"),
 			};
 
 			var references = new MetadataReference[referenceStreams.Length];

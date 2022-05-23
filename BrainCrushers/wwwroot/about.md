@@ -2,7 +2,7 @@
 
 _Brain Crushers_ is an experimental project by [Matteo Prosperi](https://www.linkedin.com/in/matteoprosperi/).
 
-The _Brain Crushers_'s source code can be found on [GitHub](https://github.com/matteo-prosperi/BrainCrushers).
+The _Brain Crushers_' source code can be found on [GitHub](https://github.com/matteo-prosperi/BrainCrushers).
 
 ## Third party acknowledgements
 

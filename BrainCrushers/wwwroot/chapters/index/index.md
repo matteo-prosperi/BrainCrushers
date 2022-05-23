@@ -1,21 +1,17 @@
-﻿# Getting code from a cs file
+﻿# Brain Crushers
 
-See [chapter 1](chapter1).
+I created this website to share C# coding interview questions and other exercises.
 
-See [not a chapter](chapter1/foo/bar).
+Using _Brain Crushers_ you can implement a solution in an environment similar to the ones used during real online coding interviews. _Brain Crushers_ also allows you to test your solution.
 
+## Strings
+- Coming soon
 
-See [Google](https://google.com).
+## Arrays
+- [Sort an array](arrays-sort)
 
+## Linked lists
+- Coming soon
 
-This text comes from a **.md** file
-
-Now I will get code from a **.cs** file.
-
-[](READONLY Prefix)
-[](EDITABLE Problem)
-[](READONLY Suffix)
-
-You can press the button below to compile and run the code above.
-
-[](RUN BrainCrushers.SortAlgorithms)
+## Recursion
+- Coming soon

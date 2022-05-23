@@ -1,4 +1,5 @@
 bin
 obj
 .vs
+.vscode
 /BrainCrushers/Properties/PublishProfiles

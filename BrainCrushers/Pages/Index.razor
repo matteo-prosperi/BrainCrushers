@@ -78,39 +78,44 @@ else
 
 	protected override async Task OnParametersSetAsync()
 	{
-		ErrorText = "Loading...";
-		Title = "Loading...";
-		IsBuildDisabled = false;
-		MarkDown = null;
-
-		if (Chapter is null)
-		{
-			Chapter = "index";
-		}
-
-		var markdownTask = Client.GetStringAsync($"chapters/{Uri.EscapeDataString(Chapter)}/index.md");
-		var codeTask = Client.GetStringAsync($"chapters/{Uri.EscapeDataString(Chapter)}/code.cs");
-		TestingCode = Client.GetStringAsync($"chapters/{Uri.EscapeDataString(Chapter)}/testing.cs");
-
-		StateHasChanged();
-
-		var markdown = await markdownTask;
-		CodeFile? codeFile = null;
 		try
 		{
-			var code = await codeTask;
-			codeFile = new(code, Chapter, LocalStorage);
+			ErrorText = "Loading...";
+			Title = "Loading...";
+			IsBuildDisabled = false;
+			MarkDown = null;
+
+			if (Chapter is null)
+			{
+				Chapter = "index";
+			}
+
+			var markdownTask = Client.GetStringAsync($"chapters/{Uri.EscapeDataString(Chapter)}/index.md");
+			var codeTask = Client.GetStringAsync($"chapters/{Uri.EscapeDataString(Chapter)}/code.cs");
+			TestingCode = Client.GetStringAsync($"chapters/{Uri.EscapeDataString(Chapter)}/testing.cs");
+
+			StateHasChanged();
+
+			var markdown = await markdownTask;
+			CodeFile? codeFile = null;
+			try
+			{
+				var code = await codeTask;
+				codeFile = new(code, Chapter, LocalStorage);
+			}
+			catch
+			{
+			}
+
+			MarkDown = new ChapterMarkdown(markdown, codeFile);
+
+			ErrorText = null;
+			Title = Chapter;
 		}
 		catch
 		{
 			ErrorText = "Error loading chapter";
-			return;
 		}
-
-		MarkDown = new ChapterMarkdown(markdown, codeFile);
-
-		ErrorText = null;
-		Title = Chapter;
 	}
 
 	private async void RunAsync(ChapterMarkdown.RunCommand command)

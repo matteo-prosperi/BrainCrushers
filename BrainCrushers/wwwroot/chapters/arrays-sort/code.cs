@@ -1,14 +1,14 @@
-﻿#region Prefix
+﻿#region Intro
 namespace BrainCrushers;
 
 using System;
 
-public partial class SortAlgorithms
+public class SortAlgorithms
 {
     public void Sort(int[] data)
 	{
 #endregion
-#region Problem
+#region Solution
         Span<int> unsorted = data;
         while (unsorted.Length > 1)
         {
@@ -27,7 +27,7 @@ public partial class SortAlgorithms
             unsorted = unsorted.Slice(1);
         }
 #endregion
-#region Suffix
+#region Outro
     }
 }
 #endregion
