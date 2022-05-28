@@ -76,6 +76,8 @@ else
 	public ChapterMarkdown? MarkDown { get; private set; }
 	public bool IsBuildDisabled { get; private set; }
 
+	private string AssemblyBuild = typeof(Program).Assembly.ManifestModule.ModuleVersionId.ToString();
+
 	protected override async Task OnParametersSetAsync()
 	{
 		try
@@ -90,9 +92,9 @@ else
 				Chapter = "index";
 			}
 
-			var markdownTask = Client.GetStringAsync($"chapters/{Uri.EscapeDataString(Chapter)}/index.md");
-			var codeTask = Client.GetStringAsync($"chapters/{Uri.EscapeDataString(Chapter)}/code.cs");
-			TestingCode = Client.GetStringAsync($"chapters/{Uri.EscapeDataString(Chapter)}/testing.cs");
+			var markdownTask = Client.GetStringAsync($"chapters/{Uri.EscapeDataString(Chapter)}/index.md?v={AssemblyBuild}");
+			var codeTask = Client.GetStringAsync($"chapters/{Uri.EscapeDataString(Chapter)}/code.cs?v={AssemblyBuild}");
+			TestingCode = Client.GetStringAsync($"chapters/{Uri.EscapeDataString(Chapter)}/testing.cs?v={AssemblyBuild}");
 
 			StateHasChanged();
 
