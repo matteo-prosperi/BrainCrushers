@@ -6,6 +6,7 @@ namespace BrainCrushers;
 
 public class ChapterMarkdown
 {
+	public static readonly Regex NewLineRegex = new Regex(@"(?:\n\r)|(?:\r\n)|\n|\r", RegexOptions.Compiled);
 	private static readonly Regex MarkdownRegex = new Regex(@"\[\]\((?:(?:EDITABLE\s+(.*?))|(?:READONLY\s+(.*?))|(?:RUN\s+(.*?)))\)", RegexOptions.Compiled | RegexOptions.Singleline);
 
 	public ReadOnlyCollection<object> Sections { get; private set; }
@@ -15,6 +16,7 @@ public class ChapterMarkdown
 
 	public ChapterMarkdown(string markdown, CodeFile? code)
     {
+		markdown = NewLineRegex.Replace(markdown, "\r\n");
 		_code = code;
 
 		List<object> sections = new List<object>();

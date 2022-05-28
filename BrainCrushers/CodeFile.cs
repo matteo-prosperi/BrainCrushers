@@ -9,7 +9,7 @@ namespace BrainCrushers;
 
 public class CodeFile
 {
-    private static readonly Regex RegionsRegex = new Regex(@"^(\s*#region(\s.*))|(\s*#endregion(?:\s.*)?)$", RegexOptions.Compiled | RegexOptions.Multiline);
+	private static readonly Regex RegionsRegex = new Regex(@"^(\s*#region(\s.*))|(\s*#endregion(?:\s.*)?)$", RegexOptions.Compiled | RegexOptions.Multiline);
 
 	private readonly ISyncLocalStorageService LocalStorage;
 	private readonly string Chapter;
@@ -23,6 +23,8 @@ public class CodeFile
 
 	public CodeFile(string code, string chapter, ISyncLocalStorageService localStorage)
     {
+		code = ChapterMarkdown.NewLineRegex.Replace(code, "\r\n");
+
 		LocalStorage = localStorage;
 		Chapter = chapter;
 
