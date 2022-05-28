@@ -16,3 +16,5 @@ The _Brain Crushers_ web site
 - the code editors are [Monaco Editor](https://microsoft.github.io/monaco-editor/) integrated through [Blazor Monaco](https://www.nuget.org/packages/BlazorMonaco/)
 - markdown rendering is implemented by [MarkDig](https://www.nuget.org/packages/Markdig/)
 - local storage support is implemented by [Blazored.LocalStorage](https://www.nuget.org/packages/Blazored.LocalStorage)
+- hosting on GitHub pages implemented according to [SteveSandersonMS/BlazorOnGitHubPages](https://github.com/SteveSandersonMS/BlazorOnGitHubPages)
+- consuming compressed Blazor assemblies using [Brotli](https://github.com/google/brotli)
