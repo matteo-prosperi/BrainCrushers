@@ -170,7 +170,7 @@ public class CodeFile
 
 		public async Task ResetCode()
         {
-			if (SavedCode is not null && Editor is not null)
+			if (Editor is not null)
             {
 				await Editor.SetValue(OriginalCode);
             }
