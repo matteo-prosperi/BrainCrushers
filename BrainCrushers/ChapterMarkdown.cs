@@ -7,6 +7,7 @@ namespace BrainCrushers;
 public class ChapterMarkdown
 {
 	public static readonly Regex NewLineRegex = new Regex(@"(?:\n\r)|(?:\r\n)|\n|\r", RegexOptions.Compiled);
+	private static readonly Regex TitleRegex = new Regex(@"^#\s+(.*)$", RegexOptions.Compiled | RegexOptions.Multiline);
 	private static readonly Regex MarkdownRegex = new Regex(@"\[\]\((?:(?:EDITABLE\s+(.*?))|(?:READONLY\s+(.*?))|(?:RUN\s+(.*?)))\)", RegexOptions.Compiled | RegexOptions.Singleline);
 
 	public ReadOnlyCollection<object> Sections { get; private set; }
@@ -14,10 +15,15 @@ public class ChapterMarkdown
 	private readonly CodeFile? _code;
 	public CodeFile Code => _code ?? throw new InvalidOperationException("The code for this chapter is unavailable");
 
+	public string? Title { get; private set; }
+
 	public ChapterMarkdown(string markdown, CodeFile? code)
     {
 		markdown = NewLineRegex.Replace(markdown, "\r\n");
 		_code = code;
+
+		var titleMatch = TitleRegex.Match(markdown);
+		Title = titleMatch.Success ? Markdig.Markdown.ToPlainText(titleMatch.Groups[1].Value.Trim()) : null;
 
 		List<object> sections = new List<object>();
 

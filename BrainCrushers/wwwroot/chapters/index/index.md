@@ -1,4 +1,4 @@
-﻿# Brain Crushers
+﻿# Index
 
 I created this website to share C# coding interview questions and other exercises.
 

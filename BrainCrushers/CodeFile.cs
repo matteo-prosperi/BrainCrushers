@@ -99,7 +99,7 @@ public class CodeFile
         {
 			DelayedSave = Task.Run(async () =>
 			{
-				await Task.Delay(TimeSpan.FromSeconds(5));
+				await Task.Delay(TimeSpan.FromSeconds(1));
 				var data = new string[Regions.Count];
 				for (int i = 0; i < data.Length; i++)
                 {
@@ -132,6 +132,7 @@ public class CodeFile
 			CodeFile = codeFile;
 			SavedCode = savedCode;
 
+			IsResettable = savedCode is not null && savedCode != code;
 			LineCount = Code.Where(c => c == '\n').Count() + 1;
 		}
 
@@ -153,6 +154,8 @@ public class CodeFile
 
 		public bool IsModifiable { get; set; }
 
+		public bool IsResettable { get; set; }
+
 		public string Code => SavedCode ?? OriginalCode;
 
 		public int LineCount { get; private set; }
@@ -165,6 +168,8 @@ public class CodeFile
 			{
 				LineCount += change.Range.StartLineNumber - change.Range.EndLineNumber + change.Text.Where(c => c == '\n').Count();
 			}
+
+			IsResettable = false;
 			CodeFile.CodeHasChanged();
 		}
 
@@ -172,6 +177,7 @@ public class CodeFile
         {
 			if (Editor is not null)
             {
+				IsResettable = false;
 				await Editor.SetValue(OriginalCode);
             }
         }

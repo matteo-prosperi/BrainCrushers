@@ -26,21 +26,24 @@ else
 			{
 				@if (codeElement.IsReadonly)
 				{
-					<div class="btn-group">
-					  <button class="btn btn-secondary btn-sm" type="button" disabled>@codeElement.Region.Name</button>
+					<div class="btn-group" style="margin-left:15px">
+						<button type="button" class="btn btn-secondary btn-sm" disabled>@codeElement.Region.Name</button>
 					</div>
 				}
 				else
 				{
-					<div class="btn-group">
-						<button class="btn btn-info btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">@codeElement.Region.Name</button>
-						<ul class="dropdown-menu">
-							<li><button class="dropdown-item" @onclick="@(codeElement.Region.ResetCode)">Reset code</button></li>
-						</ul>
+					<div class="btn-group" style="margin-left:15px">
+						<button type="button" class="btn btn-info btn-sm" disabled>@codeElement.Region.Name</button>
+						<button type="button" class="btn btn-info btn-sm" @onclick="@(codeElement.Region.ResetCode)" title="Reset" disabled="@(!codeElement.Region.IsResettable)">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+							  <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"></path>
+							  <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"></path>
+							</svg>
+						</button>
 					</div>
 				}
 			}
-			<div class="container-fluid" style="height:@(codeElement.Region.LineCount * 19 + 5)px;background-color:@(codeElement.IsReadonly ? "#A0A6AB":"#0DCAF0")">
+			<div class="container-fluid" style="height:@(codeElement.Region.LineCount * 19 + 12)px;background-color:@(codeElement.IsReadonly ? "#A0A6AB":"#62DDF5")">
 				<MonacoEditor ConstructionOptions="@((editor) => EditorConstructionOptions(editor, codeElement))" OnDidChangeModelContent="@(codeElement.Region.OnEditorCodeChange)" />
 			</div>
 		}
@@ -83,7 +86,7 @@ else
 		try
 		{
 			ErrorText = "Loading...";
-			Title = "Loading...";
+			Title = "Brain Crushers";
 			IsBuildDisabled = false;
 			MarkDown = null;
 
@@ -112,7 +115,10 @@ else
 			MarkDown = new ChapterMarkdown(markdown, codeFile);
 
 			ErrorText = null;
-			Title = Chapter;
+			if (MarkDown.Title is not null)
+			{
+				Title += " - " + MarkDown.Title;
+			}
 		}
 		catch
 		{
@@ -194,7 +200,8 @@ else
 			ScrollBeyondLastLine = false,
 			RenderLineHighlight = "none",
 			Minimap = new() { Enabled = false },
-			Folding = false
+			Folding = false,
+			Scrollbar = new() { Vertical = "hidden"}
 		};
 	}
 

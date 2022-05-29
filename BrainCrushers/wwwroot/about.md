@@ -10,11 +10,11 @@ The _Brain Crushers_ logo was created composing
 - [Brain icons created by Vitaly Gorbachev - Flaticon](https://www.flaticon.com/free-icons/brain)
 - [Clamp icons created by Freepik - Flaticon](https://www.flaticon.com/free-icons/clamp)
 
-The _Brain Crushers_ web site
-- is created using [Microsoft Blazor](https://docs.microsoft.com/en-us/aspnet/core/blazor/host-and-deploy/webassembly)
-- is implemented using [Bootstrap](https://getbootstrap.com/)
-- the code editors are [Monaco Editor](https://microsoft.github.io/monaco-editor/) integrated through [Blazor Monaco](https://www.nuget.org/packages/BlazorMonaco/)
-- markdown rendering is implemented by [MarkDig](https://www.nuget.org/packages/Markdig/)
-- local storage support is implemented by [Blazored.LocalStorage](https://www.nuget.org/packages/Blazored.LocalStorage)
-- hosting on GitHub pages implemented according to [SteveSandersonMS/BlazorOnGitHubPages](https://github.com/SteveSandersonMS/BlazorOnGitHubPages)
-- consuming compressed Blazor assemblies using [Brotli](https://github.com/google/brotli)
+Acknowledgements:
+- _Brain Crushers_ is created using [Microsoft Blazor](https://docs.microsoft.com/en-us/aspnet/core/blazor/host-and-deploy/webassembly)
+- _Brain Crushers_ is implemented using [Bootstrap](https://getbootstrap.com/)
+- The code editors are [Monaco Editor](https://microsoft.github.io/monaco-editor/) integrated through [Blazor Monaco](https://www.nuget.org/packages/BlazorMonaco/)
+- Markdown rendering is provided by [MarkDig](https://www.nuget.org/packages/Markdig/)
+- Local storage support is provided by [Blazored.LocalStorage](https://www.nuget.org/packages/Blazored.LocalStorage)
+- _Brain Crushers_ is hosted on GitHub pages following the example of [SteveSandersonMS/BlazorOnGitHubPages](https://github.com/SteveSandersonMS/BlazorOnGitHubPages)
+- _Brain Crushers_ consumes compressed Blazor assemblies using [Brotli](https://github.com/google/brotli)
