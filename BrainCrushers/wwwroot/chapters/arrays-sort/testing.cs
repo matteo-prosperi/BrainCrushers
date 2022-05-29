@@ -21,7 +21,7 @@ public class Tester
             int[] sorted = (int[])data.Clone();
             Array.Sort(sorted);
 
-            yield return $"[{string.Join(", ", data)}] => ...";
+            yield return $"[{string.Join(", ", data)}] =>";
             await Task.Yield();
 
             try

@@ -158,7 +158,12 @@ else
 				return;
 			}
 
-			if (collectibleType?.Type is not null)
+			if (collectibleType?.Type is null)
+			{
+				await command.SetResultAsync($"Couldn't find type {command.TypeName}", success: false);
+				return;
+			}
+			else
 			{
 				object chapterComponent = Activator.CreateInstance(collectibleType.Type)!;
 				try
@@ -201,7 +206,10 @@ else
 			RenderLineHighlight = "none",
 			Minimap = new() { Enabled = false },
 			Folding = false,
-			Scrollbar = new() { Vertical = "hidden"}
+			InsertSpaces = true,
+			TabSize = 4,
+			DetectIndentation = false,
+			Scrollbar = new() { Vertical = "hidden", AlwaysConsumeMouseWheel = false }
 		};
 	}
 
@@ -218,7 +226,8 @@ else
 			ScrollBeyondLastLine = false,
 			RenderLineHighlight = "none",
 			Minimap = new() { Enabled = false },
-			Folding = false
+			Folding = false,
+			Scrollbar = new() { Vertical = "hidden", AlwaysConsumeMouseWheel = false }
 		};
 	}
 }

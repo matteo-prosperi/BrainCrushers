@@ -38,6 +38,7 @@ public class CodeFile
 		if (localSave is not null && localSave.Hash != OriginalCodeHash)
         {
 			LocalStorage.RemoveItem(LocalStorageSaveKey);
+			localSave = null;
 		}
 
 		List <Region> regions = new();
