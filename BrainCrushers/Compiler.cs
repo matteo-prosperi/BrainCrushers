@@ -1,7 +1,9 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.Text;
+using System.Reflection;
 using System.Runtime.Loader;
 
 namespace BrainCrushers;
@@ -10,14 +12,16 @@ public class Compiler
 {
 	private HttpClient Client;
 
+	private const string TimeoutCheckActionPropertyName = "TimeoutCheckAction";
+
 	public Compiler(HttpClient client)
     {
 		Client = client;
 	}
 
-    public async Task<(EmitResult Result, CollectibleType? Type)> CompileAsync(string[] code, string typeName)
+    public async Task<(EmitResult Result, CollectibleType? Type, PropertyInfo? TimeoutCheckActionProperty)> CompileAsync(string[] code, string typeName)
     {
-		var syntaxTrees = code.Select(c => CSharpSyntaxTree.ParseText(SourceText.From(c)));
+		var syntaxTrees = code.Select(c => CSharpSyntaxTree.ParseText(SourceText.From(c))).ToArray();
 
 		using var templateAssemblyStream = new MemoryStream();
 		using var templatePdbStream = new MemoryStream();
@@ -42,6 +46,10 @@ public class Compiler
 			var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, optimizationLevel: OptimizationLevel.Debug)
 				.WithNullableContextOptions(NullableContextOptions.Enable);
 			var cSharpCompilation = CSharpCompilation.Create(Guid.NewGuid().ToString(), syntaxTrees, references, options);
+			CancellabilityRewriter rewriter = new(typeName);
+			syntaxTrees[0] = rewriter.Visit(cSharpCompilation.SyntaxTrees[0].GetRoot()).SyntaxTree;
+			cSharpCompilation = CSharpCompilation.Create(Guid.NewGuid().ToString(), syntaxTrees, references, options);
+
 			compilationResult = cSharpCompilation.Emit(templateAssemblyStream, templatePdbStream, options: new EmitOptions(debugInformationFormat: DebugInformationFormat.PortablePdb));
 		}
 		finally
@@ -63,12 +71,39 @@ public class Compiler
 			var loadContext = new AssemblyLoadContext("Generation context", isCollectible: true);
 			var assembly = loadContext.LoadFromStream(templateAssemblyStream, templatePdbStream);
 			var type = assembly.GetType(typeName);
+			var timeoutCheckActionProperty = type?.GetProperty(TimeoutCheckActionPropertyName, BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy);
+			if (timeoutCheckActionProperty?.SetMethod?.IsStatic is not true)
+			{
+				timeoutCheckActionProperty = null;
+			}
 
-			return (compilationResult, new(loadContext, type));
+			return (compilationResult, new(loadContext, type), timeoutCheckActionProperty);
 		}
 		else
         {
-			return (compilationResult, Type: null);
+			return (compilationResult, Type: null, TimeoutCheckActionProperty: null);
+		}
+	}
+
+	private class CancellabilityRewriter : CSharpSyntaxRewriter
+	{
+		private readonly string TypeName;
+
+		public CancellabilityRewriter(string typeName)
+        {
+			TypeName = typeName;
+        }
+
+		public override SyntaxNode? VisitBlock(BlockSyntax node)
+        {
+			List<StatementSyntax> newStatementList = new(node.Statements.Count * 2 + 1);
+			foreach (var statement in node.Statements)
+			{
+				newStatementList.Add(SyntaxFactory.ParseStatement($"global::{TypeName}.{TimeoutCheckActionPropertyName}?.Invoke();"));
+				newStatementList.Add(statement);
+			}
+			newStatementList.Add(SyntaxFactory.ParseStatement($"global::{TypeName}.{TimeoutCheckActionPropertyName}?.Invoke();"));
+			return base.VisitBlock(node.WithStatements(new(newStatementList)));
 		}
 	}
 }

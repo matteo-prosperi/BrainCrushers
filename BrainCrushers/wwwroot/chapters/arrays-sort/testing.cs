@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 public class Tester
 {
+    public static Action? TimeoutCheckAction { get; set; }
+
     public async IAsyncEnumerable<string> TestAsync()
     {
         Random random = new();

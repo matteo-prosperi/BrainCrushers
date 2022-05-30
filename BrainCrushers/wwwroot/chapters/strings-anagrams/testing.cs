@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 public class Tester1
 {
+    public static Action? TimeoutCheckAction { get; set; }
+
     public async IAsyncEnumerable<string> TestAsync()
     {
         foreach (var test in new (string Word1, string Word2, bool ExpectedResult)[]
@@ -48,6 +50,8 @@ public class Tester1
 
 public class Tester2
 {
+    public static Action? TimeoutCheckAction { get; set; }
+
     public async IAsyncEnumerable<string> TestAsync()
     {
         foreach (var test in new (string[] Words, bool ExpectedResult)[]
@@ -90,6 +94,8 @@ public class Tester2
 
 public class Tester3
 {
+    public static Action? TimeoutCheckAction { get; set; }
+    
     public async IAsyncEnumerable<string> TestAsync()
     {
         foreach (var test in new (string Word1, string Word2, bool ExpectedResult)[]

@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 public class Tester
 {
+    public static Action? TimeoutCheckAction { get; set; }
+
     public async IAsyncEnumerable<string> TestAsync()
     {
         foreach (var text in new string[] { "foo", "Foo bar", "" })

@@ -46,6 +46,8 @@ public class Tester2 : BaseTester
 
 public abstract class BaseTester
 {
+    public static Action? TimeoutCheckAction { get; set; }
+
     protected readonly (string Text, bool ExpectedResult)[] Tests;
     private readonly Func<string, bool> ToBeTested;
 
