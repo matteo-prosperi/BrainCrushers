@@ -27,8 +27,8 @@ public class Tester
                 throw new ApplicationException("Error while running test", e);
             }
 
-            bool success = result.SequenceEqual(text.Reverse());
-            yield return $" \"{result}\" {(success ? '✓' : '✗')}{Environment.NewLine}";
+            bool success = result?.SequenceEqual(text.Reverse()) ?? false;
+            yield return $" {(result is null ? "null" : "\"" + result + "\"")} {(success ? '✓' : '✗')}{Environment.NewLine}";
             if (!success)
             {
                 throw new ApplicationException("Invalid test result");

@@ -48,3 +48,7 @@ Can you implement a variant `AreAnagrams2` which returns true if the two words a
 [](READONLY Outro 3)
 
 [](RUN BrainCrushersTests.Tester3)
+
+---
+
+**Next:** [Escape a string](strings-escape)

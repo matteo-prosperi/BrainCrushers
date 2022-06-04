@@ -26,7 +26,7 @@
 
   <Target Name="ConfigureTrimming" BeforeTargets="PrepareForILLink">
     <ItemGroup>
-      <ManagedAssemblyToLink Condition="'%(Filename)' == 'System.Private.CoreLib' Or '%(Filename)' == 'System.Runtime' Or '%(Filename)' == 'System.Linq'">
+      <ManagedAssemblyToLink Condition="'%(Filename)' == 'System.Private.CoreLib' Or '%(Filename)' == 'System.Runtime' Or '%(Filename)' == 'System.Linq' Or '%(Filename)' == 'System.Collections' Or '%(Filename)' == 'System.Collections.Immutable'">
         <IsTrimmable>false</IsTrimmable>
       </ManagedAssemblyToLink>
     </ItemGroup>

@@ -35,6 +35,8 @@ public class Compiler
 				Client.GetStreamAsync("_framework/System.Private.CoreLib.dll"),
 				Client.GetStreamAsync("_framework/System.Runtime.dll"),
 				Client.GetStreamAsync("_framework/System.Linq.dll"),
+				Client.GetStreamAsync("_framework/System.Collections.dll"),
+				Client.GetStreamAsync("_framework/System.Collections.Immutable.dll"),
 			};
 
 			var references = new MetadataReference[referenceStreams.Length];
@@ -46,9 +48,13 @@ public class Compiler
 			var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, optimizationLevel: OptimizationLevel.Debug)
 				.WithNullableContextOptions(NullableContextOptions.Enable);
 			var cSharpCompilation = CSharpCompilation.Create(Guid.NewGuid().ToString(), syntaxTrees, references, options);
-			CancellabilityRewriter rewriter = new(typeName);
-			syntaxTrees[0] = rewriter.Visit(cSharpCompilation.SyntaxTrees[0].GetRoot()).SyntaxTree;
-			cSharpCompilation = CSharpCompilation.Create(Guid.NewGuid().ToString(), syntaxTrees, references, options);
+
+			if (cSharpCompilation.GetDiagnostics().All(d => d.Severity != DiagnosticSeverity.Error))
+            {
+				CancellabilityRewriter rewriter = new(typeName);
+				syntaxTrees[0] = rewriter.Visit(cSharpCompilation.SyntaxTrees[0].GetRoot()).SyntaxTree;
+				cSharpCompilation = CSharpCompilation.Create(Guid.NewGuid().ToString(), syntaxTrees, references, options);
+			}
 
 			compilationResult = cSharpCompilation.Emit(templateAssemblyStream, templatePdbStream, options: new EmitOptions(debugInformationFormat: DebugInformationFormat.PortablePdb));
 		}

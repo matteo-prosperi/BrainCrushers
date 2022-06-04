@@ -8,6 +8,10 @@ Using _Brain Crushers_ you can implement a solution in an environment similar to
 - [Is a string a palindrome?](strings-palindrome)
 - [Reverse a string](strings-reverse)
 - [Are they anagrams?](strings-anagrams)
+- [Escape a string](strings-escape)
+- [Split a string](strings-split)
+- [Filter our invalid strings from a list](strings-filterList)
+- [Convert array to dictionary](strings-arrayToDictionary)
 
 ## Arrays
 - [Sort an array](arrays-sort)
