@@ -13,14 +13,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Publish app
-      run: dotnet publish -c Release
-
     - name: Rewrite base href
       uses: SteveSandersonMS/ghaction-rewrite-base-href@v1
       with:
-        html_path: ${{ env.PUBLISH_DIR }}/index.html
+        html_path: BrainCrushers/wwwroot/index.html
         base_href: /BrainCrushers/
+
+    - name: Publish app
+      run: dotnet publish -c Release
 
     - name: GitHub Pages
       if: success()
