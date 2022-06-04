@@ -3,6 +3,8 @@
 
 @using System.Text
 @using Blazored.LocalStorage
+@using System.Text.Json
+@using System.IO.Compression
 
 <PageTitle>@Title</PageTitle>
 
@@ -50,7 +52,14 @@ else
 		else if (element is ChapterMarkdown.RunCommand runElement)
 		{
 			<div class="container-fluid">
-				<button class="btn btn-primary" @onclick="@(() => RunAsync(runElement))" disabled="@IsBuildDisabled">Build and run <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden="@(!IsBuildDisabled)"></span></button>
+				<div class="btn-group">
+					<button class="btn btn-primary" @onclick="@(() => RunAsync(runElement))" disabled="@IsBuildDisabled">Build and run <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden="@(!IsBuildDisabled)"></span></button>
+					<button class="btn btn-primary" @onclick="@SharePage" title="Share your solution" disabled="@IsBuildDisabled">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share" viewBox="0 0 16 16">
+							<path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+						</svg>
+					</button>
+				</div>
 			</div>
 			<div class="container-fluid" style="height:@(runElement.LineCount * 19 + 5)px;background-color:@(runElement.Success switch { true => "lightgreen", false => "pink", _ => "white"})">
 				<MonacoEditor ConstructionOptions="@((editor) => OutputConstructionOptions(editor, runElement))" />
@@ -58,7 +67,16 @@ else
 		}
 	}
 }
-
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+	<div class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
+	  <div class="d-flex">
+		<div class="toast-body">
+		Hello, world! This is a toast message.
+	   </div>
+		<button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+	  </div>
+	</div>
+</div>
 @code{
 
 	#pragma warning disable CS8618 //Non-nullable property must contain a non-null value when exiting constructor
@@ -66,11 +84,17 @@ else
 	public HttpClient Client { get; set; }
 	[Inject]
 	ISyncLocalStorageService LocalStorage { get; set; }
+	[Inject]
+	IJSRuntime JS { get; set; }
 
 	// Set when setting URI parameters
 
 	[Parameter]
 	public string Chapter { get; set; }
+	[Parameter]
+	[SupplyParameterFromQuery(Name = "code")]
+	public string QueryProvidedCode { get; set; }
+
 	public string Title { get; private set; }
 	public Task<string> TestingCode;
 #pragma warning restore CS8618
@@ -106,7 +130,9 @@ else
 			try
 			{
 				var code = await codeTask;
-				codeFile = new(code, Chapter, LocalStorage);
+				codeFile = QueryProvidedCode is null
+					? new(code, Chapter, LocalStorage)
+					: new(code, Chapter, QueryProvidedCode);
 			}
 			catch
 			{
@@ -206,6 +232,12 @@ else
 			IsBuildDisabled = false;
 			StateHasChanged();
 		}
+	}
+
+	private async void SharePage()
+	{
+		var save = await MarkDown!.Code.GetCompressedCodeAsync();
+		await JS.InvokeAsync<object>("sharePage", "My solution", $"{Title} - Solution", $"{Uri.EscapeDataString(Chapter)}?code={save}");
 	}
 
 	private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor, ChapterMarkdown.CodeRegion region)

@@ -1,8 +1,10 @@
 ﻿using Blazored.LocalStorage;
 using BlazorMonaco;
 using System.Collections.ObjectModel;
+using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace BrainCrushers;
@@ -11,7 +13,7 @@ public class CodeFile
 {
 	private static readonly Regex RegionsRegex = new Regex(@"^(\s*#region(\s.*))|(\s*#endregion(?:\s.*)?)$", RegexOptions.Compiled | RegexOptions.Multiline);
 
-	private readonly ISyncLocalStorageService LocalStorage;
+	private readonly ISyncLocalStorageService? LocalStorage;
 	private readonly string Chapter;
 	private readonly string OriginalCodeHash;
 
@@ -21,7 +23,28 @@ public class CodeFile
 
 	public ReadOnlyCollection<Region> Regions { get; private set; }
 
-	public CodeFile(string code, string chapter, ISyncLocalStorageService localStorage)
+	public CodeFile(string code, string chapter, ISyncLocalStorageService localStorage) : this(code, chapter, localStorage, queryProvidedCode: null)
+	{
+	}
+
+	public CodeFile(string code, string chapter, string queryProvidedCode) : this(code, chapter, localStorage: null, queryProvidedCode)
+	{
+	}
+
+	public async Task<string> GetCompressedCodeAsync()
+    {
+		var save = await GetSaveAsync();
+		using MemoryStream codeData = new();
+		JsonSerializer.Serialize(codeData, save);
+		codeData.Seek(0, SeekOrigin.Begin);
+		using MemoryStream compressedCodeData = new();
+		using DeflateStream compressingStream = new(compressedCodeData, CompressionLevel.SmallestSize);
+		codeData.CopyTo(compressingStream);
+		compressingStream.Close();
+		return Uri.EscapeDataString(Convert.ToBase64String(compressedCodeData.ToArray()));
+	}
+
+	private CodeFile(string code, string chapter, ISyncLocalStorageService? localStorage, string? queryProvidedCode)
     {
 		code = ChapterMarkdown.NewLineRegex.Replace(code, "\r\n");
 
@@ -34,10 +57,29 @@ public class CodeFile
 			OriginalCodeHash = Convert.ToBase64String(hashGenerator.ComputeHash(codeBytes, 0, codeBytes.Length));
 		}
 
-		ChapterLocalSave? localSave = LocalStorage.GetItem<ChapterLocalSave>(LocalStorageSaveKey);
-		if (localSave is not null && localSave.Hash != OriginalCodeHash)
+		ChapterLocalSave? localSave = null;
+		if (LocalStorage is not null)
         {
-			LocalStorage.RemoveItem(LocalStorageSaveKey);
+			localSave = LocalStorage.GetItem<ChapterLocalSave>(LocalStorageSaveKey);
+		}
+		else if (queryProvidedCode is not null)
+        {
+			try
+            {
+				using MemoryStream compressedCodeData = new(Convert.FromBase64String(queryProvidedCode));
+				using MemoryStream codeData = new();
+				using var decompressor = new DeflateStream(compressedCodeData, CompressionMode.Decompress);
+				decompressor.CopyTo(codeData);
+				codeData.Seek(0, SeekOrigin.Begin);
+				localSave = JsonSerializer.Deserialize<ChapterLocalSave>(codeData);
+			}
+			catch
+			{ }
+		}
+
+		if (localSave is not null && localSave.Hash != OriginalCodeHash)
+		{
+			LocalStorage?.RemoveItem(LocalStorageSaveKey);
 			localSave = null;
 		}
 
@@ -96,29 +138,34 @@ public class CodeFile
 
 	private void CodeHasChanged()
     {
-		if (DelayedSave is null)
+		if (LocalStorage is not null && DelayedSave is null)
         {
 			DelayedSave = Task.Run(async () =>
 			{
 				await Task.Delay(TimeSpan.FromSeconds(1));
-				var data = new string[Regions.Count];
-				for (int i = 0; i < data.Length; i++)
-                {
-					if (Regions[i].IsModifiable)
-                    {
-						data[i] = await Regions[i].GetCurrentCodeAsync();
-					}
-				}
-				ChapterLocalSave save = new ChapterLocalSave(OriginalCodeHash)
-				{
-					CodeBackup = data,
-				};
+				ChapterLocalSave save = await GetSaveAsync();
 
 				LocalStorage.SetItem(LocalStorageSaveKey, save);
 				DelayedSave = null;
 			});
 		}
     }
+
+	private async Task<ChapterLocalSave> GetSaveAsync()
+    {
+		var data = new string[Regions.Count];
+		for (int i = 0; i < data.Length; i++)
+		{
+			if (Regions[i].IsModifiable)
+			{
+				data[i] = await Regions[i].GetCurrentCodeAsync();
+			}
+		}
+		return new ChapterLocalSave(OriginalCodeHash)
+		{
+			CodeBackup = data,
+		};
+	}
 
 	public record Region
 	{
