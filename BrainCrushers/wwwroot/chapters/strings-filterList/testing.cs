@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -36,10 +35,10 @@ public class Tester
     {
         foreach (var data in new IReadOnlyList<string>[]
             {
-                new string[] { "foo", "I💗BrainCrushers", "baz", "f00b4r" }.ToImmutableArray(),
-                ImmutableArray<string>.Empty ,
-                new string[] { "f001" }.ToImmutableArray(),
-                new string[] { "foo_bar", "foo:bar", "foobar" }.ToImmutableArray(),
+                new List<string> { "foo", "I💗BrainCrushers", "baz", "f00b4r" }.AsReadOnly(),
+                new List<string> {}.AsReadOnly(),
+                new List<string> { "f001" }.AsReadOnly(),
+                new List<string> { "foo_bar", "foo:bar", "foobar" }.AsReadOnly(),
             })
         {
             yield return $"{PrintStringList(data)} =>";

@@ -36,7 +36,6 @@ public class Compiler
 				Client.GetStreamAsync("_framework/System.Runtime.dll"),
 				Client.GetStreamAsync("_framework/System.Linq.dll"),
 				Client.GetStreamAsync("_framework/System.Collections.dll"),
-				Client.GetStreamAsync("_framework/System.Collections.Immutable.dll"),
 			};
 
 			var references = new MetadataReference[referenceStreams.Length];
