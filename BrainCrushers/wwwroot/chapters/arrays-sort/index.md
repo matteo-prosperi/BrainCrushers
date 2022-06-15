@@ -1,4 +1,8 @@
-﻿# Sort an array
+﻿**Previous:** [Find a value](arrays-findValue)
+
+# Sort an array
+
+**Difficulty:** Medium.
 
 The `Sort` method below takes an array of integers as parameter.
 

@@ -14,6 +14,13 @@ Using _Brain Crushers_ you can implement a solution in an environment similar to
 - [Convert array to dictionary](strings-arrayToDictionary)
 
 ## Arrays
+- [Reverse an array](arrays-reverse)
+- [Maximum moving average](arrays-maxMovingAverage)
+- [Merge arrays](arrays-merge)
+- [Escape a char array](arrays-escape)
+- [Longest increasing sequence](arrays-longestIncreasingSequence)
+- [Maximum average of increasing sequence](arrays-maxAverageOfIncreasingSequence)
+- [Find a value](arrays-findValue)
 - [Sort an array](arrays-sort)
 
 ## Linked lists

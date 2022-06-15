@@ -15,3 +15,6 @@ You can use library methods.
 
 [](RUN BrainCrushersTests.Tester)
 
+---
+
+**Next:** [Reverse array](arrays-reverse)
