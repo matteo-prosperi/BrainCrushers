@@ -1,4 +1,4 @@
-﻿**Previous:** [Escape a char array](arrays-escape)
+﻿**Previous:** [Remove duplicates](arrays-removeDuplicates)
 
 # Longest increasing sequence
 

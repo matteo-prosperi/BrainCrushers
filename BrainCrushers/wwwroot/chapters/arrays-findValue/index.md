@@ -19,10 +19,10 @@ Don't use library methods.
 
 **Difficulty:** Easy.
 
-Update the code above to have maximum time complexity *log2(n)*. This means completing the find operation without reading more than *log2(n) + 1* array elements. This can be achieved because the elements in the array are sorted: you can check the item at the center of the array, which will allow you to know on which side of the array `value` is (on the right side if `value` is greater than the element at the center, otherwise on the left). Continue splitting the array in smaller and smaller halves until you find `value`. This is called "binary search".
+Update the code above to have maximum time complexity *log<sub>2</sub>(n)*. This means completing the find operation without reading more than *log<sub>2</sub>(n) + 1* array elements. This can be achieved because the elements in the array are sorted: you can check the item at the center of the array, which will allow you to know on which side of the array `value` is (on the right side if `value` is greater than the element at the center, otherwise on the left). Continue splitting the array in smaller and smaller halves until you find `value`. This is called "binary search".
 
 [](RUN BrainCrushersTests.Tester2)
 
 ---
 
-**Next:** [Sort an array](arrays-sort)
+**Next:** [Rotate an array](arrays-rotate)

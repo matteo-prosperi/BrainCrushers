@@ -18,10 +18,16 @@ Using _Brain Crushers_ you can implement a solution in an environment similar to
 - [Maximum moving average](arrays-maxMovingAverage)
 - [Merge arrays](arrays-merge)
 - [Escape a char array](arrays-escape)
+- [Remove duplicates](arrays-removeDuplicates)
 - [Longest increasing sequence](arrays-longestIncreasingSequence)
 - [Maximum average of increasing sequence](arrays-maxAverageOfIncreasingSequence)
 - [Find a value](arrays-findValue)
+- [Rotate an array](arrays-rotate)
+- [Calculate array rotation](arrays-getRotation)
 - [Sort an array](arrays-sort)
+
+## Multi-dimensional arrays
+- Coming soon
 
 ## Linked lists
 - Coming soon

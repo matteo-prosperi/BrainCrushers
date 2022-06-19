@@ -19,4 +19,4 @@ Do not use library methods.
 
 ---
 
-**Next:** [Longest increasing sequence](arrays-longestIncreasingSequence)
+**Next:** [Remove duplicates](arrays-removeDuplicates)

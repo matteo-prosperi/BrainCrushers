@@ -43,7 +43,7 @@ public class Tester
             yield return s;
         await foreach (string s in TestArrayAsync(new int[] { 0, 1, 2, 3, 4, 5, 6, 7 }, 9))
             yield return s;
-        await foreach (string s in TestArrayAsync(new int[] { 1, 12, 4 }, 1))
+        await foreach (string s in TestArrayAsync(new int[] { 1, 12, 40 }, 1))
             yield return s;
         await foreach (string s in TestArrayAsync(new char[] { 'a', 'b', 'e', 'g', 'u' }, 'b'))
             yield return s;
@@ -86,7 +86,7 @@ public class Tester
         }
         if (CountReads)
         {
-            int expectedReads = data.Length > 0 ? (int)Math.Log2(data.Length) + 1 : 1;
+            int expectedReads = data.Length > 0 ? (int)Math.Log2(data.Length) + 1 : 0;
             yield return $" Reads: {container.ReadCount} {(container.ReadCount > expectedReads ? ">" : "<=")} {expectedReads}";
             if (container.ReadCount > expectedReads)
             {
