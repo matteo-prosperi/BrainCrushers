@@ -56,3 +56,7 @@ Using [Span](https://docs.microsoft.com/en-us/dotnet/api/system.span-1) drastica
 ### Tip
 
 Create separate private methods to keep the implementation clean and readable.
+
+---
+
+**Next:** [Find the best historical time to buy and sell stocks](arrays-buySell)

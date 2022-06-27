@@ -25,12 +25,20 @@ Using _Brain Crushers_ you can implement a solution in an environment similar to
 - [Rotate an array](arrays-rotate)
 - [Calculate array rotation](arrays-getRotation)
 - [Sort an array](arrays-sort)
+- [Find the best historical time to buy and sell stocks](arrays-buySell)
 
 ## Multi-dimensional arrays
 - Coming soon
 
 ## Linked lists
-- Coming soon
+- [Convert an array to a linked list and back](lists-arrayToList)
+- [Linked list operations](lists-operations)
+<!-- - [Remove duplicates](lists-removeDuplicates)
+- [Merge sorted lists](lists-removeDuplicates)
+- [Reverse list](lists-reverse)
+- [Sort a list](lists-sort)
+- [Split a list around the highest value](lists-split)
+- [N<sup>th</sup> to last](lists-nthToLast) -->
 
 ## Recursion
 - Coming soon

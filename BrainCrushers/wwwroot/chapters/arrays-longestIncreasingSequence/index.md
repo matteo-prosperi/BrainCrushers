@@ -18,7 +18,7 @@ C# supports [generics](https://docs.microsoft.com/en-us/dotnet/csharp/fundamenta
 
 For example, the `FindLongestIncreasingSequence` method below works with arrays independently from the type of their elements: the code uses the placeholder `T` to represent such type.
 
-In this case, a [constraint](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/generics/constraints-on-type-parameters) is placed on `T` requiring the implementation of [IComparable<T>](https://docs.microsoft.com/en-us/dotnet/api/system.icomparable-1), which means that you can use the [CompareTo](https://docs.microsoft.com/en-us/dotnet/api/system.icomparable-1.compareto) method on array elements to evaluate when a increasing sequence terminates.
+In this case, a [constraint](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/generics/constraints-on-type-parameters) is placed on `T` requiring the implementation of [IComparable\<T\>](https://docs.microsoft.com/en-us/dotnet/api/system.icomparable-1), which means that you can use the [CompareTo](https://docs.microsoft.com/en-us/dotnet/api/system.icomparable-1.compareto) method on array elements to evaluate when a increasing sequence terminates.
 
 [](EDITABLE Using statements)
 [](READONLY Intro)

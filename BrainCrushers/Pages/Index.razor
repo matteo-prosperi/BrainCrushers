@@ -172,10 +172,10 @@ else
 		{
 			if (!compilationResult.Success)
 			{
-				StringBuilder sb = new();
+				StringBuilder sb = new();	
 				sb.AppendLine();
 				sb.AppendLine("Diagnostics:");
-				foreach (var d in compilationResult.Diagnostics)
+				foreach (var d in compilationResult.Diagnostics.Where(d => d.Severity == Microsoft.CodeAnalysis.DiagnosticSeverity.Error))
 				{
 					sb.AppendLine();
 					sb.AppendLine(d.ToString());

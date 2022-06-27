@@ -4,7 +4,7 @@
 
 **Difficulty:** very easy.
 
-Implement the method  below so that it reverses the order of the elements in the input array.
+Implement the `Reverse` method below so that it reverses the order of the elements in the input array.
 
 Don't use any library method.
 
