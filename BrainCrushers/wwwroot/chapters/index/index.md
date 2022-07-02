@@ -33,11 +33,11 @@ Using _Brain Crushers_ you can implement a solution in an environment similar to
 ## Linked lists
 - [Convert an array to a linked list and back](lists-arrayToList)
 - [Linked list operations](lists-operations)
-<!-- - [Remove duplicates](lists-removeDuplicates)
-- [Merge sorted lists](lists-removeDuplicates)
-- [Reverse list](lists-reverse)
+- [Remove duplicates](lists-removeDuplicates)
+- [Merge sorted lists](lists-merge)
+- [Reverse a list](lists-reverse)
 - [Sort a list](lists-sort)
-- [Split a list around the highest value](lists-split)
+<!-- - [Split a list around the highest value](lists-split)
 - [N<sup>th</sup> to last](lists-nthToLast) -->
 
 ## Recursion

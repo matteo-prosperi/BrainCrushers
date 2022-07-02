@@ -160,3 +160,7 @@ For example, the `Add` method below adds an element to the beginning of the list
 Explicit implementations are also needed when two interfaces require to implement methods with the same name and parameters but different return values. In this case, we have to implement explicitly at least one of `IEnumerable.GetEnumerator()` and `IEnumerable<T>.GetEnumerator()`. We chose to implement explicitly `IEnumerable.GetEnumerator()` because `IEnumerable` is an outdated interface.
 
 [](READONLY Explicit implementations)
+
+---
+
+**Next:** [Remove duplicates](lists-removeDuplicates)
