@@ -18,3 +18,7 @@ Don't use any library method.
 [](READONLY Outro)
 
 [](RUN BrainCrushersTests.Tester)
+
+---
+
+**Next:** [Factorial](recursion-factorial)

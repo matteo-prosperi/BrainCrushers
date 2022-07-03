@@ -29,6 +29,8 @@ Using _Brain Crushers_ you can implement a solution in an environment similar to
 
 ## Multi-dimensional arrays
 - Coming soon
+<!-- - [Implement a 3x3 matrix value type](matrices-operations)
+- [Row with most true values](matrices-mostTrues) -->
 
 ## Linked lists
 - [Convert an array to a linked list and back](lists-arrayToList)
@@ -41,4 +43,8 @@ Using _Brain Crushers_ you can implement a solution in an environment similar to
 - [N<sup>th</sup> to last](lists-nthToLast) -->
 
 ## Recursion
-- Coming soon
+- [Factorial](recursion-factorial)
+- [Concatenate](recursion-concatenate)
+- [Math expressions](recursion-math)
+<!-- - [Fibonacci](recursion-fibonacci)
+- [Tower of Hanoi](recursion-hanoi) -->
