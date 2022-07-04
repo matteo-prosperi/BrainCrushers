@@ -46,5 +46,5 @@ Using _Brain Crushers_ you can implement a solution in an environment similar to
 - [Factorial](recursion-factorial)
 - [Concatenate](recursion-concatenate)
 - [Math expressions](recursion-math)
-<!-- - [Fibonacci](recursion-fibonacci)
-- [Tower of Hanoi](recursion-hanoi) -->
+- [Fibonacci](recursion-fibonacci)
+- [Tower of Hanoi](recursion-hanoi)
