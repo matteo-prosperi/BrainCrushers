@@ -16,11 +16,17 @@ public class Tester
             yield return $"{n} =>";
             await Task.Yield();
 
-            long result;
+            long? result;
             try
             {
                 BrainCrushers.Exercise exercise = new();
                 result = exercise.Fibonacci(n);
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                if (n <= 92)
+                    throw new ApplicationException("Error while running test", e);
+                result = null;
             }
             catch (Exception e)
             {
@@ -49,8 +55,8 @@ public class Tester
                 expected = curr;
             }
 
-            bool success = result == expected;
-            yield return $" {result} {(success ? '✓' : '✗')}{Environment.NewLine}";
+            bool success = result == null || result == expected;
+            yield return $" {(result?.ToString() ?? "ArgumentOutOfRangeException")} {(success ? '✓' : '✗')}{Environment.NewLine}";
             if (!success)
             {
                 throw new ApplicationException("Invalid test result");
