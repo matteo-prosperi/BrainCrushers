@@ -1,4 +1,4 @@
-﻿**Previous:** [Find the best historical time to buy and sell stocks](arrays-buySell)
+﻿**Previous:** [Implement a 3x3 matrix type](matrices-operations)
 
 # Convert an array to a linked list and back
 

@@ -29,4 +29,4 @@ C# [records](https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/tutorials/
 
 ---
 
-**Next:** [Convert an array to a linked list and back](lists-arrayToList)
+**Next:** [Print a matrix](matrices-print)
