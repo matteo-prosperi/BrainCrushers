@@ -30,7 +30,7 @@ Using _Brain Crushers_ you can implement a solution in an environment similar to
 ## Multi-dimensional arrays
 - [Print a matrix](matrices-print)
 - [Implement a 3x3 matrix type](matrices-operations)
-<!-- - [Row with most true values](matrices-mostTrues) -->
+- [Row with most true values](matrices-mostTrues)
 
 ## Linked lists
 - [Convert an array to a linked list and back](lists-arrayToList)
@@ -48,4 +48,6 @@ Using _Brain Crushers_ you can implement a solution in an environment similar to
 - [Math expressions](recursion-math)
 - [Fibonacci](recursion-fibonacci)
 - [Tower of Hanoi](recursion-hanoi)
-<!-- - [Traverse a maze](lists-maze) -->
+
+## Misc. problems
+- [Traverse a maze](misc-maze)

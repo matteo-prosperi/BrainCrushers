@@ -139,24 +139,16 @@ public abstract class Tester
         StringBuilder result = new();
         for (int y = 0; y < 3; y++)
         {
-            result.Append(y switch
-            {
-                0 => "[",
-                1 => "[",
-                _ => "[",
-            });
+            result.Append("[");
             for (int x = 0; x < 3; x++)
             {
                 if (x != 0)
                     result.Append(' ');
                 result.Append(a[y, x]);
             }
-            result.Append(y switch
-            {
-                0 => $"]{Environment.NewLine}",
-                1 => $"]{Environment.NewLine}",
-                _ => "]",
-            });
+            result.Append("]");
+            if (y <= 1)
+                result.AppendLine();
         }
 
         return result.ToString();
@@ -167,12 +159,7 @@ public abstract class Tester
         StringBuilder result = new();
         for (int y = 0; y < 3; y++)
         {
-            result.Append(y switch
-            {
-                0 => "[",
-                1 => "[",
-                _ => "[",
-            });
+            result.Append("[");
             for (int x = 0; x < 3; x++)
             {
                 if (x != 0)
@@ -181,7 +168,6 @@ public abstract class Tester
             }
             result.Append(y switch
             {
-                0 => $"]   [",
                 1 => $"] {op} [",
                 _ => "]   [",
             });
@@ -191,12 +177,9 @@ public abstract class Tester
                     result.Append(' ');
                 result.Append(b[y, x]);
             }
-            result.Append(y switch
-            {
-                0 => $"]{Environment.NewLine}",
-                1 => $"]{Environment.NewLine}",
-                _ => "]",
-            });
+            result.Append("]");
+            if (y <= 1)
+                result.AppendLine();
         }
 
         return result.ToString();
@@ -207,12 +190,7 @@ public abstract class Tester
         StringBuilder result = new();
         for (int y = 0; y < 3; y++)
         {
-            result.Append(y switch
-            {
-                0 => "[",
-                1 => "[",
-                _ => "[",
-            });
+            result.Append("[");
             for (int x = 0; x < 3; x++)
             {
                 if (x != 0)

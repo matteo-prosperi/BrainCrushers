@@ -1,4 +1,4 @@
-﻿**Previous:** [Implement a 3x3 matrix type](matrices-operations)
+﻿**Previous:** [Row with most true values](matrices-mostTrues)
 
 # Convert an array to a linked list and back
 

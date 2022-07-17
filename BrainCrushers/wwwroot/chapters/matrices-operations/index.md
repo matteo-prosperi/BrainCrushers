@@ -77,7 +77,7 @@ Complete the `operator *` method below implementing the multiplication of a `Mat
 
 ### Did you know?
 
-Because the `Matrix` class represents a "value" and different `Matrix` objects may "be equal" (have the same value), we should override the [Equals(object? obj)](https://docs.microsoft.com/en-us/dotnet/api/system.object.equals) method.
+Because the `Matrix` class represents a "mathematical value" and different `Matrix` objects may "be equal" (have the same value), we should override the [Equals(object? obj)](https://docs.microsoft.com/en-us/dotnet/api/system.object.equals) method.
 
 Whenever we override the `Equals` method, we also **must** override the [GetHashCode()](https://docs.microsoft.com/en-us/dotnet/api/system.object.gethashcode) method that is used to optimize checks for equality and to implement [hash tables](https://en.wikipedia.org/wiki/Hash_table). Whenever two objects of the same type are equal (`Equals` returns `true`) the `GetHashCode` method **must** return the same value for both of them.
 
@@ -93,4 +93,4 @@ When implementing `Equals` and operators for reference types, it is important to
 
 ---
 
-**Next:** [Convert an array to a linked list and back](lists-arrayToList)
+**Next:** [Row with most true values](matrices-mostTrues)

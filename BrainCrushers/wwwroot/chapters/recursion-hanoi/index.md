@@ -20,3 +20,7 @@ The tower of Hanoi problem can be solved through recursion in roughly 10 lines o
 [](READONLY Outro)
 
 [](RUN BrainCrushersTests.Tester)
+
+---
+
+**Next:**  [Traverse a maze](misc-maze)
