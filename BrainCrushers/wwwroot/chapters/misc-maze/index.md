@@ -2,7 +2,7 @@
 
 # Traverse a maze
 
-**Difficulty:** Medium.
+**Difficulty:** Hard.
 
 Complete the `Traverse` method below to returning the sequence of movements needed to navigate the input maze from the `start` position to the `end` position.
 

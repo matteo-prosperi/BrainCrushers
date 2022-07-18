@@ -33,8 +33,6 @@ Now complete the `ListToArray` method below converting the input linked list int
 
 Don't use any library method.
 
-You can solve linked lists problems
-
 [](READONLY Intro 2)
 [](EDITABLE Solution 2)
 [](READONLY Outro 2)

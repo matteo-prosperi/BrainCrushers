@@ -23,4 +23,4 @@ The tower of Hanoi problem can be solved through recursion in roughly 10 lines o
 
 ---
 
-**Next:**  [Traverse a maze](misc-maze)
+**Next:** [Count and depth of a binary tree](binTrees-countAndDepth)

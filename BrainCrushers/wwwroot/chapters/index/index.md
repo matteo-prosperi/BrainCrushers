@@ -49,5 +49,9 @@ Using _Brain Crushers_ you can implement a solution in an environment similar to
 - [Fibonacci](recursion-fibonacci)
 - [Tower of Hanoi](recursion-hanoi)
 
+## Binary Trees
+- [Count and depth of a binary tree](binTrees-countAndDepth)
+- [Convert a binary tree to a list](binTrees-toList)
+
 ## Misc. problems
 - [Traverse a maze](misc-maze)
