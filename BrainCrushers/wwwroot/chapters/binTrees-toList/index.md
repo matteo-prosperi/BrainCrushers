@@ -63,4 +63,4 @@ For example, the tree from the example above would be listed *breadth-first* as 
 
 ---
 
-**Next:** [Traverse a maze](misc-maze)
+**Next:** [Binary Search Trees](binTrees-bst)

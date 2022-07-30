@@ -52,6 +52,7 @@ Using _Brain Crushers_ you can implement a solution in an environment similar to
 ## Binary Trees
 - [Count and depth of a binary tree](binTrees-countAndDepth)
 - [Convert a binary tree to a list](binTrees-toList)
+- [Binary Search Trees](binTrees-bst)
 
 ## Misc. problems
 - [Traverse a maze](misc-maze)

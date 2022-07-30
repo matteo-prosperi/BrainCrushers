@@ -1,4 +1,4 @@
-﻿**Previous:** [Tower of Hanoi](recursion-hanoi)
+﻿**Previous:** [Binary Search Trees](binTrees-bst)
 
 # Traverse a maze
 
