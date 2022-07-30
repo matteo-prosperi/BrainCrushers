@@ -1,0 +1,52 @@
+/* /Shared/MainLayout.razor.rz.scp.css */
+.page[b-zt775f0kto] {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+main[b-zt775f0kto] {
+    flex: 1;
+}
+
+.top-row[b-zt775f0kto] {
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #d6d5d5;
+    justify-content: flex-end;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.top-row[b-zt775f0kto]  a, .top-row[b-zt775f0kto]  .btn-link {
+    white-space: nowrap;
+    margin-left: 1.5rem;
+    text-decoration: none;
+}
+
+.top-row[b-zt775f0kto]  a:hover, .top-row[b-zt775f0kto]  .btn-link:hover {
+    text-decoration: underline;
+}
+
+.top-row[b-zt775f0kto]  a:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.page[b-zt775f0kto] {
+    flex-direction: row;
+}
+
+.top-row.auth[b-zt775f0kto]  a:first-child {
+    flex: 1;
+    text-align: right;
+    width: 0;
+}
+
+.top-row[b-zt775f0kto], article[b-zt775f0kto] {
+    padding-left: 2rem !important;
+    padding-right: 1.5rem !important;
+}
