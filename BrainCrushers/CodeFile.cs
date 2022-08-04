@@ -172,6 +172,7 @@ public class CodeFile
 		private readonly CodeFile CodeFile;
 		private readonly string OriginalCode;
 		private readonly string? SavedCode;
+		private bool IsResetting = false;
 
 		public Region(string? name, string code, string? savedCode, CodeFile codeFile)
 		{
@@ -217,7 +218,11 @@ public class CodeFile
 				LineCount += change.Range.StartLineNumber - change.Range.EndLineNumber + change.Text.Where(c => c == '\n').Count();
 			}
 
-			IsResettable = false;
+			if (IsResetting is false)
+            {
+				IsResettable = true;
+			}
+
 			CodeFile.CodeHasChanged();
 		}
 
@@ -226,9 +231,18 @@ public class CodeFile
 			if (Editor is not null)
             {
 				IsResettable = false;
-				await Editor.SetValue(OriginalCode);
-            }
-        }
+				try
+                {
+					IsResetting = true;
+					await Editor.SetValue(OriginalCode);
+				}
+				finally
+                {
+					IsResetting = false;
+				}
+			}
+
+		}
 	}
 
 	public class ChapterLocalSave
