@@ -64,4 +64,4 @@ Update the `IsBalanced` method below to return whether the tree passed as parame
 
 ---
 
-**Next:** [Traverse a maze](misc-maze)
+**Next:** [Binary Search Trees, read operations](binTrees-bstRead)
