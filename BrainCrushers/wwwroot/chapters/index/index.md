@@ -54,6 +54,8 @@ Using _Brain Crushers_ you can implement a solution in an environment similar to
 - [Convert a binary tree to a list](binTrees-toList)
 - [Binary Search Trees](binTrees-bst)
 - [Binary Search Trees, read operations](binTrees-bstRead)
+- [Binary Search Trees, write operations](binTrees-bstWrite)
+- [Create a binary search trees from a sorted array](binTrees-bstFromSortedArray)
 
 ## Misc. problems
 - [Traverse a maze](misc-maze)

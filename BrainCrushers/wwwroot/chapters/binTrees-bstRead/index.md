@@ -1,6 +1,6 @@
 ﻿**Previous:** [*binary search tree*s](binTrees-bst)
 
-# *binary search tree*s, read operations
+# Binary search trees, read operations
 
 **Difficulty:** Easy.
 
@@ -64,4 +64,4 @@ a [min heap](https://en.wikipedia.org/wiki/Heap_(data_structure)) is even more e
 
 ---
 
-**Next:** [Traverse a maze](misc-maze)
+**Next:** [Binary Search Trees, write operations](binTrees-bstWrite)
