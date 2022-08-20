@@ -1,4 +1,4 @@
-﻿**Previous:** [Binary Search Trees, read operations](binTrees-bstRead)
+﻿**Previous:** [Top view of a binary tree](binTrees-topView)
 
 # Traverse a maze
 

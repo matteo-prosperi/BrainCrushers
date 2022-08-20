@@ -56,6 +56,7 @@ Using _Brain Crushers_ you can implement a solution in an environment similar to
 - [Binary Search Trees, read operations](binTrees-bstRead)
 - [Binary Search Trees, write operations](binTrees-bstWrite)
 - [Create a binary search trees from a sorted array](binTrees-bstFromSortedArray)
+- [Top view of a binary tree](binTrees-topView)
 
 ## Misc. problems
 - [Traverse a maze](misc-maze)

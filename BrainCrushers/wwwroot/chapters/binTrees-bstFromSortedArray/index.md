@@ -17,4 +17,4 @@ You can use library methods.
 
 ---
 
-**Next:** [Traverse a maze](misc-maze)
+**Next:** [Top view of a binary tree](binTrees-topView)
