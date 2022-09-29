@@ -39,8 +39,8 @@ public class AddAsTailTester : BaseTester
         await foreach (string s in RunTestAsync(
             new int[] { },
             (list) => RunOperationAsync(list, () => list.AddAsTail(1), "AddAsTail(1)", new int[] { 1 }),
-            (list) => RunOperationAsync(list, () => list.AddAsTail(2), "AddAsHead(2)", new int[] { 1, 2 }),
-            (list) => RunOperationAsync(list, () => list.AddAsTail(3), "AddAsHead(3)", new int[] { 1, 2, 3 })))
+            (list) => RunOperationAsync(list, () => list.AddAsTail(2), "AddAsTail(2)", new int[] { 1, 2 }),
+            (list) => RunOperationAsync(list, () => list.AddAsTail(3), "AddAsTail(3)", new int[] { 1, 2, 3 })))
             yield return s;
     }
 }
@@ -51,10 +51,10 @@ public class RemoveTailTester : BaseTester
     {
         await foreach (string s in RunTestAsync(
             new int[] { 1, 2, 3 },
-            (list) => RunOperationAsync(list, () => list.RemoveTail(), "RemoveHead() => ", new int[] { 1, 2 }, 3),
-            (list) => RunOperationAsync(list, () => list.RemoveTail(), "RemoveHead() => ", new int[] { 1 }, 2),
-            (list) => RunOperationAsync(list, () => list.RemoveTail(), "RemoveHead() => ", new int[] { }, 1),
-            (list) => RunOperationAsync(list, () => list.RemoveTail(), "RemoveHead() => ", new int[] { }, typeof(InvalidOperationException))))
+            (list) => RunOperationAsync(list, () => list.RemoveTail(), "RemoveTail() => ", new int[] { 1, 2 }, 3),
+            (list) => RunOperationAsync(list, () => list.RemoveTail(), "RemoveTail() => ", new int[] { 1 }, 2),
+            (list) => RunOperationAsync(list, () => list.RemoveTail(), "RemoveTail() => ", new int[] { }, 1),
+            (list) => RunOperationAsync(list, () => list.RemoveTail(), "RemoveTail() => ", new int[] { }, typeof(InvalidOperationException))))
             yield return s;
     }
 }
